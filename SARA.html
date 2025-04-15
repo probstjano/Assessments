@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>SARA – Ataxie-Assessment</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    h1 { text-align: center; }
+    label { display: block; margin: 10px 0; }
+    select { margin-left: 10px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    #result { font-weight: bold; margin-top: 20px; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>SARA – Scale for the Assessment and Rating of Ataxia</h1>
+  <form id="assessmentForm">
+    <div id="questions"></div>
+    <button type="button" onclick="calculateScore()">✅ Score berechnen</button>
+  </form>
+  <p id="result"></p>
+
+  <script>
+    const questions = [
+      {
+        text: "1. Gang",
+        options: [
+          { value: 0, label: "Normales Gehen, keine Auffälligkeit" },
+          { value: 1, label: "Leichte Unsicherheit, kein Hilfsmittel nötig" },
+          { value: 2, label: "Sichtbar breitbasiger Gang, noch unabhängig" },
+          { value: 3, label: "Deutlich instabil, benötigt sichtbare Hilfe" },
+          { value: 4, label: "Gehen nur mit Unterstützung (z. B. Rollator)" },
+          { value: 5, label: "Gehunfähig, sitzt oder liegt" }
+        ]
+      },
+      {
+        text: "2. Stand",
+        options: [
+          { value: 0, label: "Stehen >10 Sek. ohne Probleme" },
+          { value: 1, label: "Leicht schwankend" },
+          { value: 2, label: "Deutlich schwankend, aber ohne Hilfe" },
+          { value: 3, label: "Stehen nur mit Unterstützung möglich" },
+          { value: 4, label: "Nicht möglich zu stehen, selbst mit Hilfe" }
+        ]
+      },
+      {
+        text: "3. Sitzen",
+        options: [
+          { value: 0, label: "Sicheres Sitzen ohne Unterstützung" },
+          { value: 1, label: "Leichte Instabilität" },
+          { value: 2, label: "Sitzen nur mit Unterstützung möglich" },
+          { value: 3, label: "Nicht in der Lage zu sitzen" }
+        ]
+      },
+      {
+        text: "4. Sprache",
+        options: [
+          { value: 0, label: "Normal verständlich" },
+          { value: 1, label: "Leicht undeutlich" },
+          { value: 2, label: "Deutlich undeutlich, aber verständlich" },
+          { value: 3, label: "Stark beeinträchtigt, schwer verständlich" },
+          { value: 4, label: "Unverständlich" }
+        ]
+      },
+      {
+        text: "5. Finger-Nase-Versuch (rechts)",
+        options: [
+          { value: 0, label: "Treffsicher, keine Dysmetrie" },
+          { value: 1, label: "Leichte Dysmetrie" },
+          { value: 2, label: "Deutliche Dysmetrie, noch zielgerichtet" },
+          { value: 3, label: "Stark verlangsamt, ungenau" },
+          { value: 4, label: "Ziel nicht erreichbar" }
+        ]
+      },
+      {
+        text: "6. Finger-Nase-Versuch (links)",
+        options: [
+          { value: 0, label: "Treffsicher, keine Dysmetrie" },
+          { value: 1, label: "Leichte Dysmetrie" },
+          { value: 2, label: "Deutliche Dysmetrie, noch zielgerichtet" },
+          { value: 3, label: "Stark verlangsamt, ungenau" },
+          { value: 4, label: "Ziel nicht erreichbar" }
+        ]
+      },
+      {
+        text: "7. Schnelle alternierende Handbewegungen (z. B. Pronation/Supination)",
+        options: [
+          { value: 0, label: "Normal" },
+          { value: 1, label: "Leicht verlangsamt, rhythmisch" },
+          { value: 2, label: "Deutlich verlangsamt, arrhythmisch" },
+          { value: 3, label: "Unkoordiniert, kaum ausführbar" },
+          { value: 4, label: "Nicht ausführbar" }
+        ]
+      },
+      {
+        text: "8. Fersen-Knie-Versuch",
+        options: [
+          { value: 0, label: "Ferse sicher zur Kniescheibe geführt" },
+          { value: 1, label: "Leichte Unsicherheit, aber durchführbar" },
+          { value: 2, label: "Deutlich abweichende Bahn, stark verlangsamt" },
+          { value: 3, label: "Bewegung kaum steuerbar" },
+          { value: 4, label: "Test nicht durchführbar" }
+        ]
+      }
+    ];
+
+    const container = document.getElementById("questions");
+
+    questions.forEach((q, i) => {
+      let optionsHTML = q.options.map(opt =>
+        `<option value="${opt.value}">${opt.label}</option>`
+      ).join("");
+      container.innerHTML += `
+        <label>${q.text}
+          <select name="q${i}">
+            ${optionsHTML}
+          </select>
+        </label>
+      `;
+    });
+
+    function calculateScore() {
+      const form = document.forms["assessmentForm"];
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        score += parseInt(form["q" + i].value);
+      }
+      document.getElementById("result").innerText = `Gesamtscore: ${score} / 40`;
+    }
+  </script>
+</body>
+</html>
