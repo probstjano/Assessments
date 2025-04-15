@@ -4,43 +4,55 @@
 <head>
   <meta charset="UTF-8">
   <title>DEMMI</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    label { display: block; margin: 10px 0; }
+  </style>
 </head>
 <body>
   <h1>DEMMI – De Morton Mobility Index</h1>
   <form id="demmiForm">
-    <p>Bitte alle zutreffenden Fragen mit "Ja" (1 Punkt) beantworten.</p>
     <div id="questions"></div>
-    <button type="button" onclick="calculateDEMMI()">Score berechnen</button>
+    <button type="button" onclick="calculateDEMMI()">✅ Score berechnen</button>
+    <button type="button" onclick="downloadPDF()">📄 Als PDF speichern</button>
   </form>
   <p id="result"></p>
 
+  <button onclick="window.location.href='index.html'" style="margin-top:20px; padding:10px 20px; font-size:16px;">
+    🔙 Zurück zum Hauptmenü
+  </button>
+
   <script>
     const questions = [
-      "Kopf heben im Liegen",
-      "Rollen im Bett",
-      "Aufsitzen",
-      "Aufstehen vom Stuhl",
-      "Stehen ohne Hilfe",
-      "Stehen mit geschlossenen Augen",
-      "Gleichgewicht beim Stehen",
-      "Transfer auf Stuhl",
-      "Gehen mit Hilfe",
-      "Gehen ohne Hilfe",
-      "Tandemstand",
-      "Einbeinstand",
-      "Schritt über Hindernis",
-      "Treppen steigen",
-      "Laufen über 3 Meter"
+      { text: "1. Gesäß anheben im Bett", options: [ {value: 0, label: "nicht möglich"}, {value:1, label:"möglich" }]},
+      { text: "2. Seitlich rollen", options: [0, 1] },
+      { text: "3. Aufsitzen auf die Bettkante", options: [0, 1] },
+      { text: "4. Sitzen ohne Armlehne (10 Sek.)", options: [0, 1] },
+      { text: "5. Aufstehen MIT Armlehne", options: [0, 1] },
+      { text: "6. Aufstehen OHNE Armlehne", options: [0, 1, 2] },
+      { text: "7. Stehen frei (10 Sek.)", options: [0, 1] },
+      { text: "8. Stehen mit geschlossenen Füßen (10 Sek.)", options: [0, 1] },
+      { text: "9. Zehenspitzenstand (10 Sek.)", options: [0, 1] },
+      { text: "10. Tandemstand mit geschlossenen Augen (10 Sek.)", options: [0, 1] },
+      { text: "11. Gehstrecke", options: [0, 1, 2] },
+      { text: "12. Gehen: Selbständigkeit", options: [0, 1, 2] },
+      { text: "13. Stift aufheben", options: [0, 1] },
+      { text: "14. 4 Schritte rückwärts", options: [0, 1] },
+      { text: "15. Beidbeiniges Springen", options: [0, 1] }
     ];
+
+    const conversion = [0,8,15,20,24,27,30,33,36,39,41,44,48,53,57,62,67,67,74,85,100];
 
     const container = document.getElementById("questions");
     questions.forEach((q, i) => {
-      container.innerHTML += `<label>${q}: 
-        <select name="q${i}">
-          <option value="0">Nein</option>
-          <option value="1">Ja</option>
-        </select>
-      </label><br>`;
+      let optionsHTML = "";
+      q.options.forEach(val => {
+        optionsHTML += `<option value="${val}">${val}</option>`;
+      });
+      container.innerHTML += `<label>${q.text}
+        <select name="q${i}">${optionsHTML}</select>
+      </label>`;
     });
 
     function calculateDEMMI() {
@@ -49,8 +61,18 @@
       for (let i = 0; i < questions.length; i++) {
         score += parseInt(form["q" + i].value);
       }
-      const converted = Math.round((score / 15) * 100);
-      document.getElementById("result").innerText = `Rohscore: ${score}/15, Skaliert: ${converted}/100`;
+      const scaled = score <= 20 ? conversion[score] : "Ungültig";
+      document.getElementById("result").innerText =
+        `Rohscore: ${score}/20 → DEMMI-Score: ${scaled}/100`;
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const text = document.getElementById("result").innerText || "Noch kein Ergebnis berechnet.";
+      doc.text("DEMMI-Ergebnis", 10, 10);
+      doc.text(text, 10, 20);
+      doc.save("demmi-ergebnis.pdf");
     }
   </script>
 </body>
