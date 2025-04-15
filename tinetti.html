@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Tinetti</title>
+</head>
+<body>
+  <h1>Tinetti-Test</h1>
+  <form id="tinettiForm">
+    <label>Balance (0–16 Punkte): 
+      <input type="number" id="balance" min="0" max="16">
+    </label><br>
+    <label>Gang (0–12 Punkte): 
+      <input type="number" id="gait" min="0" max="12">
+    </label><br>
+    <button type="button" onclick="calculateTinetti()">Berechnen</button>
+  </form>
+  <p id="output"></p>
+
+  <script>
+    function calculateTinetti() {
+      const b = parseInt(document.getElementById("balance").value);
+      const g = parseInt(document.getElementById("gait").value);
+      const total = b + g;
+      let result = "Sturzrisiko: ";
+      if (total < 19) result += "hoch";
+      else if (total <= 23) result += "moderat";
+      else result += "niedrig";
+      document.getElementById("output").innerText = `Gesamt: ${total}/28 – ${result}`;
+    }
+  </script>
+</body>
+</html>

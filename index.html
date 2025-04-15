@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>test-app</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .assessment { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Assessment Übersicht</h1>
+  <label for="filter">Bereich filtern:</label>
+  <select id="filter" onchange="filterItems()">
+    <option value="alle">Alle</option>
+    <option value="standard">Standard Assessments</option>
+    <option value="gleichgewicht">Gleichgewicht</option>
+    <option value="schlaf">Schlaf</option>
+  </select>
+
+  <div id="assessments">
+    <div class="assessment" data-kategorie="standard">
+      <a href="demmi.html">DEMMI</a>
+    </div>
+    <div class="assessment" data-kategorie="gleichgewicht">
+      <a href="tinetti.html">Tinetti</a>
+    </div>
+    <div class="assessment" data-kategorie="schlaf">
+      <a href="isi.html">Insomnia Severity Index</a>
+    </div>
+  </div>
+
+  <script>
+    function filterItems() {
+      const selected = document.getElementById("filter").value;
+      document.querySelectorAll('.assessment').forEach(item => {
+        item.style.display = (selected === 'alle' || item.dataset.kategorie === selected) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

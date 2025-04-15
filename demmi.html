@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>DEMMI</title>
+</head>
+<body>
+  <h1>DEMMI – De Morton Mobility Index</h1>
+  <form id="demmiForm">
+    <p>Bitte alle zutreffenden Fragen mit "Ja" (1 Punkt) beantworten.</p>
+    <div id="questions"></div>
+    <button type="button" onclick="calculateDEMMI()">Score berechnen</button>
+  </form>
+  <p id="result"></p>
+
+  <script>
+    const questions = [
+      "Kopf heben im Liegen",
+      "Rollen im Bett",
+      "Aufsitzen",
+      "Aufstehen vom Stuhl",
+      "Stehen ohne Hilfe",
+      "Stehen mit geschlossenen Augen",
+      "Gleichgewicht beim Stehen",
+      "Transfer auf Stuhl",
+      "Gehen mit Hilfe",
+      "Gehen ohne Hilfe",
+      "Tandemstand",
+      "Einbeinstand",
+      "Schritt über Hindernis",
+      "Treppen steigen",
+      "Laufen über 3 Meter"
+    ];
+
+    const container = document.getElementById("questions");
+    questions.forEach((q, i) => {
+      container.innerHTML += `<label>${q}: 
+        <select name="q${i}">
+          <option value="0">Nein</option>
+          <option value="1">Ja</option>
+        </select>
+      </label><br>`;
+    });
+
+    function calculateDEMMI() {
+      const form = document.forms["demmiForm"];
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        score += parseInt(form["q" + i].value);
+      }
+      const converted = Math.round((score / 15) * 100);
+      document.getElementById("result").innerText = `Rohscore: ${score}/15, Skaliert: ${converted}/100`;
+    }
+  </script>
+</body>
+</html>

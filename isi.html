@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>ISI</title>
+</head>
+<body>
+  <h1>Insomnia Severity Index (ISI)</h1>
+  <form id="isiForm">
+    <p>Bitte wählen Sie für jede Frage einen Wert zwischen 0 (keine Probleme) und 4 (sehr schwerwiegend).</p>
+    <div id="isiItems"></div>
+    <button type="button" onclick="calculateISI()">Berechnen</button>
+  </form>
+  <p id="isiResult"></p>
+
+  <script>
+    const items = [
+      "Einschlafprobleme",
+      "Durchschlafprobleme",
+      "Frühes Erwachen",
+      "Zufriedenheit mit Schlaf",
+      "Beeinträchtigung durch Schlafprobleme",
+      "Erkennbarkeit der Probleme für andere",
+      "Sorge/Stress über Schlaf"
+    ];
+
+    const isiDiv = document.getElementById("isiItems");
+    items.forEach((item, i) => {
+      isiDiv.innerHTML += `<label>${item}: 
+        <select name="item${i}">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label><br>`;
+    });
+
+    function calculateISI() {
+      const form = document.forms["isiForm"];
+      let score = 0;
+      for (let i = 0; i < items.length; i++) {
+        score += parseInt(form["item" + i].value);
+      }
+      let interpretation = "";
+      if (score <= 7) interpretation = "Keine klinisch relevante Insomnie";
+      else if (score <= 14) interpretation = "Subklinische Insomnie";
+      else if (score <= 21) interpretation = "Moderate Insomnie";
+      else interpretation = "Schwere Insomnie";
+      document.getElementById("isiResult").innerText = `Score: ${score}/28 – ${interpretation}`;
+    }
+  </script>
+</body>
+</html>
