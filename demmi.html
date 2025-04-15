@@ -95,14 +95,15 @@
     const container = document.getElementById("questions");
     questions.forEach((q, i) => {
       let optionsHTML = "";
-      q.options.forEach(val => {
-        optionsHTML += `<option value="${val}">${val}</option>`;
-      });
+     q.options.forEach(opt => {
+  optionsHTML += `<option value="${opt.value}">${opt.label}</option>`;
+});
       container.innerHTML += `<label>${q.text}
         <select name="q${i}">${optionsHTML}</select>
       </label>`;
     });
 
+    
     function calculateDEMMI() {
       const form = document.forms["demmiForm"];
       let score = 0;
